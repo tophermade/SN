@@ -5,6 +5,15 @@ using UnityEngine.UI;
 using UnityEngine.SocialPlatforms;
 
 public class Lumbergh : MonoBehaviour {
+	// we're not using the built in unity platform checking / compiler flags
+	// because there is a fair amount of overlap. still use compile flags
+	// for libraries etc
+	public enum Platform{
+		desktop, gameRoom, itch, gamejolt, ios, android, kindle
+	}
+
+
+	public Platform platform;
 	
 	public GameObject player;
 	public GameObject cam;
@@ -42,6 +51,7 @@ public class Lumbergh : MonoBehaviour {
 	public float speedBoostDelay = 1.0f;
 	private float lastSpeedBoostAt;
 
+
 	public int coinsOwned = 0;
 	public int continueCost = 50;
 
@@ -51,7 +61,6 @@ public class Lumbergh : MonoBehaviour {
 	public int roundScore = 0;
 
 
-	public bool isGameRoom = false;
 	public bool isPlaying = false;
 	public bool isPaused = false;
 	public bool isPlayerSquare = true;
@@ -82,6 +91,12 @@ public class Lumbergh : MonoBehaviour {
 		enableThis.SetActive(true);
 	}
 
+	IEnumerator DisableWithDelay(GameObject disableThis, float timeToDelay){
+		yield return new WaitForSeconds(timeToDelay);
+		disableThis.GetComponent<Animator>().SetTrigger("PlayOut");
+		disableThis.SetActive(false);
+	}
+
 
 	void StartFirstRound(){
 		gameOverScreen.SetActive(false);
@@ -96,8 +111,9 @@ public class Lumbergh : MonoBehaviour {
 		DestroyLastRoundObjects();
 		isPaused = false;
 		isPlaying = true;
-		gameOverScreen.SetActive(false);
+		StartCoroutine(DisableWithDelay(gameOverScreen, .5f));
 		useCreditScreen.SetActive(false);
+		mainScreen.GetComponent<Animator>().SetTrigger("PlayInAndOut");
 		playerSquare.GetComponent<SpriteRenderer>().flipY = false;
 		playerCircle.GetComponent<SpriteRenderer>().flipY = false;
 		lastRowAt = 0;
@@ -109,6 +125,8 @@ public class Lumbergh : MonoBehaviour {
 
 		StartRound();
 	}
+
+
 
 
 	void StartRound(){
@@ -230,6 +248,8 @@ public class Lumbergh : MonoBehaviour {
 	IEnumerator ShowGameOver(){
 		yield return new WaitForSeconds(1);
 		gameOverScreen.SetActive(true);
+		gameOverScreen.GetComponent<Animator>().SetTrigger("PlayIn");
+		mainScreen.GetComponent<Animator>().SetTrigger("PlayOut");
 	}
 
 
@@ -293,17 +313,7 @@ public class Lumbergh : MonoBehaviour {
 
 	void InitiateShare(){
 		if(Application.platform == RuntimePlatform.WindowsPlayer){
-			if(isGameRoom){
-				
-			} else {
-
-			}
-		} else if(Application.platform == RuntimePlatform.WebGLPlayer){
-
-		} else if(Application.platform == RuntimePlatform.IPhonePlayer){
-
-		} else if(Application.platform == RuntimePlatform.Android){
-
+			
 		}
 	}
 
