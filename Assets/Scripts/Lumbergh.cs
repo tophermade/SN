@@ -9,7 +9,7 @@ public class Lumbergh : MonoBehaviour {
 	// because there is a fair amount of overlap. still use compile flags
 	// for libraries etc
 	public enum Platform{
-		desktop, gameRoom, itch, gamejolt, ios, android, kindle
+		desktop, gameRoom, itch, newgrounds, kongregate, gamejolt, ios, android, kindle
 	}
 
 
@@ -59,6 +59,7 @@ public class Lumbergh : MonoBehaviour {
 	public float minRowGap = 2.5f;
 	public float maxRowGap = 5.5f;
 	public int roundScore = 0;
+	public int roundCount = 0;
 
 
 	public bool isPlaying = false;
@@ -99,6 +100,7 @@ public class Lumbergh : MonoBehaviour {
 
 
 	void StartFirstRound(){
+		player.SetActive(true);
 		gameOverScreen.SetActive(false);
 		useCreditScreen.SetActive(false);
 		mainScreen.GetComponent<Animator>().SetTrigger("PlayOut");
@@ -135,6 +137,7 @@ public class Lumbergh : MonoBehaviour {
 		player.transform.position = new Vector3(.6f, 0,0);
 		playerManager.SetToSquare();
 		isPlayerSquare = true;
+		roundCount++;
 	}
 
 
@@ -232,6 +235,11 @@ public class Lumbergh : MonoBehaviour {
 		playerSquare.SetActive(false);
 		useCreditScreen.SetActive(false);
 		StartCoroutine(ShowGameOver());
+
+		if(roundCount == 5){
+			roundCount = 0;
+			BroadcastMessage("ShowInterstertial");
+		}
 	}
 
 
@@ -336,5 +344,10 @@ public class Lumbergh : MonoBehaviour {
 
 	void FixedUpdate () {
 		MovePlayer();
+	}
+
+
+	public void QuitApp(){
+		Application.Quit();
 	}
 }
