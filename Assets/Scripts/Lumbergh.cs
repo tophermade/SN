@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Purchasing;
 using UnityEngine.SocialPlatforms;
 
 public class Lumbergh : MonoBehaviour {
@@ -41,6 +42,7 @@ public class Lumbergh : MonoBehaviour {
 	public GameObject scoreDisplayGameOver;
 	public GameObject coinEffect;
 	public GameObject bestDisplay;
+	public GameObject buyButton;
 	
 
 
@@ -349,5 +351,11 @@ public class Lumbergh : MonoBehaviour {
 
 	public void QuitApp(){
 		Application.Quit();
+	}
+
+
+	public void NoAdsPurchased(Product product){
+		PlayerPrefs.SetString("ShowAds", "true");
+		buyButton.SetActive(false);
 	}
 }
